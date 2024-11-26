@@ -10,7 +10,7 @@
 
 <template>
     <div class="container p-5 bg-dark text-white">
-        <h1 class="text-center">Point of Sale Rent-a-Tool Form</h1>
+        <h1 class="text-center text-decoration-underline">Point of Sale Rent-a-Tool Form</h1>
 
         <div class="row pt-5">
             <div class="col-sm-12">

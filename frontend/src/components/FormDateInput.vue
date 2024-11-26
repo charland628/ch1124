@@ -24,39 +24,47 @@
         data() {
             return {
                 inputValue: this.value,
-            }
+            };
         },
+
         props: {
             id: {
                 type: String,
                 required: true,
             },
+
             name: {
                 type: String,
                 required: true,
             },
+
             label: {
                 type: String,
                 required: false,
                 default: '',
             },
+
             required: {
                 type: Boolean,
                 required: false,
                 default: false,
             },
+
             min: {
                 type: String,
                 required: false,
                 default: '',
             },
+
             value: {
                 type: String,
                 required: false,
                 default: '',
             },
         },
+
         emits: ['input-changed-value'],
+
         methods: {
             handleInputChange() {
                 this.$emit('input-changed-value', this.name, this.inputValue);

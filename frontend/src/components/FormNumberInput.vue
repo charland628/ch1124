@@ -8,12 +8,12 @@
         </label>
         <input
             type="number"
-            step="any"
             :id="id"
             :name="name"
             class="form-control"
             :required="required"
             :min="min"
+            :max="max"
             v-model="inputValue"
             @change="handleInputChange"
         >
@@ -25,39 +25,51 @@
         data() {
             return {
                 inputValue: this.value,
-            }
+            };
         },
+
         props: {
             id: {
                 type: String,
                 required: true,
             },
+
             name: {
                 type: String,
                 required: true,
             },
+
             label: {
                 type: String,
                 required: false,
                 default: '',
             },
+
             required: {
                 type: Boolean,
                 required: false,
                 default: false,
             },
+
             min: {
                 type: Number,
                 required: false,
-                default: 0,
             },
+
+            max: {
+                type: Number,
+                required: false,
+            },
+
             value: {
                 type: Number,
                 required: false,
                 default: 0,
             },
         },
+
         emits: ['input-changed-value'],
+
         methods: {
             handleInputChange() {
                 this.$emit('input-changed-value', this.name, this.inputValue);

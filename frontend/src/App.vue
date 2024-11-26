@@ -1,5 +1,27 @@
 <script>
     import { RouterLink, RouterView } from 'vue-router';
+    import apiFetcher from './services/apiFetcher.js';
+
+    export default {
+        data() {
+            return {
+                tools: { data: null },
+                toolCharges: { data: null },
+            };
+        },
+
+        provide() {
+            return {
+                tools: this.tools,
+                toolCharges: this.toolCharges,
+            };
+        },
+
+        async created() {
+            this.tools.data = await apiFetcher.getToolsMOCK();
+            this.toolCharges.data = await apiFetcher.getToolChargesMOCK();
+        },
+    }
 </script>
 
 <template>

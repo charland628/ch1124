@@ -8,7 +8,7 @@
                         :id="toolSelect.id"
                         :name="toolSelect.name"
                         :required="toolSelect.required"
-                        :options="toolSelect.options"
+                        :options="toolSelectOptions"
                         :placeholder="toolSelect.placeholder"
                         :value="toolSelect.value"
                         @select-changed-value="handleChangedInputValue"
@@ -30,7 +30,7 @@
                         label="Please choose a return date (at least one day in future)"
                         :id="returnDateInput.id"
                         :name="returnDateInput.name"
-                        :min="tomorrowAsString"
+                        :min="firstAvailableReturnDateAsString"
                         :required="returnDateInput.required"
                         :value="returnDateInput.value"
                         @input-changed-value="handleChangedInputValue"
@@ -38,16 +38,17 @@
                 </div>
                 <div class="p-2">
                     <form-number-input
-                        label="If applying a daily discount, enter amount below"
+                        label="If applying a daily discount, enter percentage below"
                         :id="discountInput.id"
                         :name="discountInput.name"
                         :min="discountInput.minimum"
+                        :max="discountInput.maximum"
                         :required="discountInput.required"
                         :value="discountInput.value"
                         @input-changed-value="handleChangedInputValue"
                     />
                 </div>
-                <div class="p-2">
+                <div class="p-2 text-center">
                     <button
                         type="submit"
                         class="btn btn-primary"
@@ -61,6 +62,7 @@
 </template>
 
 <script>
+    import moment from 'moment';
     import FormSelect from '../components/FormSelect.vue';
     import FormDateInput from '../components/FormDateInput.vue';
     import FormNumberInput from '../components/FormNumberInput.vue';
@@ -76,61 +78,96 @@
             'form-date-input': FormDateInput,
             'form-number-input': FormNumberInput,
         },
+
+        inject: ['tools', 'toolCharges'],
+
         data() {
             return {
+                usDollar: new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'USD',
+                }),
+
                 toolSelect: {
                     required: true,
                     id: TOOL_SELECT_ID,
                     name: TOOL_SELECT_ID,
                     value: '',
                     placeholder: 'Please select one of the following tools',
-                    options: ['Option 1', 'Option 2', 'Option 3', 'Option 4'],
                 },
+
                 checkoutDateInput: {
                     required: true,
                     id: CHECKOUT_DATE_ID,
                     name: CHECKOUT_DATE_ID,
                     value: '',
                 },
+
                 returnDateInput: {
                     required: true,
                     id: RETURN_DATE_ID,
                     name: RETURN_DATE_ID,
                     value: '',
                 },
+
                 discountInput: {
                     required: false,
                     id: DISCOUNT_ID,
                     name: DISCOUNT_ID,
                     minimum: 0,
+                    maximum: 100,
                     value: 0,
                 },
-            }
+            };
         },
+
         computed: {
             today() {
-                return new Date();
+                return moment().set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
             },
+
             tomorrow() {
-                const today = this.today;
-                return new Date(today.setDate(today.getDate() + 1));
+                return this.today.add(1, 'days');
             },
+
             todayAsString() {
-                const date = this.today;
-                return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+                return this.today.format('YYYY-MM-DD');
             },
-            tomorrowAsString() {
-                const date = this.tomorrow;
-                return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+
+            firstAvailableReturnDateAsString() {
+                let latestDate = this.tomorrow;
+                if (this.checkoutDateInput.value.length > 0) {
+                    const checkoutDate = moment(this.checkoutDateInput.value);
+                    latestDate = !checkoutDate.isBefore(this.tomorrow) ? checkoutDate.add(1, 'days') : this.tomorrow;
+                }
+                return latestDate.format('YYYY-MM-DD');
+            },
+
+            toolSelectOptions() {
+                const options = [];
+                this.tools.data.forEach((tool) => {
+                    const price = this.toolCharges.data.find(t => t.type === tool.type).dailyCharge;
+                    const option = {
+                        desc: `${tool.brand} ${tool.type}: Up to ${this.usDollar.format(price)} per day`,
+                        code: tool.code,
+                    };
+                    options.push(option);
+                });
+                return options;
             },
         },
+
         methods: {
             submitRental() {
+                console.log('toolSelectOptions', this.toolSelectOptions);
                 console.log('toolSelect.value', this.toolSelect.value);
                 console.log('checkoutDateInput.value', this.checkoutDateInput.value);
                 console.log('returnDateInput.value', this.returnDateInput.value);
                 console.log('discountInput.value', this.discountInput.value);
+                console.log('tools', this.tools.data);
+                console.log('toolCharges', this.toolCharges.data);
             },
+
             handleChangedInputValue(name, newValue) {
                 switch(name) {
                     case CHECKOUT_DATE_ID:
