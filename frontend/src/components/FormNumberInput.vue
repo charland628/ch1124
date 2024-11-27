@@ -17,6 +17,20 @@
             v-model="inputValue"
             @change="handleInputChange"
         >
+        <div class="invalid-feedback">
+            <span
+                v-if="warning.length"
+                class="text-bg-danger"
+            >
+                {{ warning }}
+                <span
+                    v-if="warningDetail.length"
+                >
+                    <br />
+                    {{ warningDetail }}
+                </span>
+            </span>
+        </div>
     </div>
 </template>
 
@@ -59,6 +73,18 @@
             max: {
                 type: Number,
                 required: false,
+            },
+
+            warning: {
+                type: String,
+                required: false,
+                default: '',
+            },
+
+            warningDetail: {
+                type: String,
+                required: false,
+                default: '',
             },
 
             value: {

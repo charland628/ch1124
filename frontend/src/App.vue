@@ -7,6 +7,10 @@
             return {
                 tools: { data: null },
                 toolCharges: { data: null },
+                apisFetched: {
+                    tools: false,
+                    toolCharges: false,
+                },
             };
         },
 
@@ -14,12 +18,15 @@
             return {
                 tools: this.tools,
                 toolCharges: this.toolCharges,
+                apisFetched: this.apisFetched,
             };
         },
 
         async created() {
             this.tools.data = await apiFetcher.getToolsMOCK();
             this.toolCharges.data = await apiFetcher.getToolChargesMOCK();
+            this.apisFetched.tools = true;
+            this.apisFetched.toolCharges = true;
         },
     }
 </script>

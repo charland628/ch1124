@@ -1,7 +1,10 @@
 <template>
-    <div class="row pt-1">
+    <div
+        v-if="allApisFetched"
+        class="row pt-1"
+    >
         <div class="col-sm-12 text-bg-secondary">
-            <form v-on:submit.prevent="submitRental">
+            <form :class="{ 'was-validated': submitClicked }">
                 <div class="p-2">
                     <form-select
                         label="Select one of the following tools"
@@ -11,6 +14,7 @@
                         :options="toolSelectOptions"
                         :placeholder="toolSelect.placeholder"
                         :value="toolSelect.value"
+                        warning="Please select a tool."
                         @select-changed-value="handleChangedInputValue"
                     />
                 </div>
@@ -22,6 +26,7 @@
                         :min="todayAsString"
                         :required="checkoutDateInput.required"
                         :value="checkoutDateInput.value"
+                        warning="Please enter a valid date."
                         @input-changed-value="handleChangedInputValue"
                     />
                 </div>
@@ -33,6 +38,8 @@
                         :min="firstAvailableReturnDateAsString"
                         :required="returnDateInput.required"
                         :value="returnDateInput.value"
+                        warning="Please enter a valid date."
+                        warning-detail="Return date must be at least one day after checkout date."
                         @input-changed-value="handleChangedInputValue"
                     />
                 </div>
@@ -45,19 +52,27 @@
                         :max="discountInput.maximum"
                         :required="discountInput.required"
                         :value="discountInput.value"
+                        warning="Discount percentage must be between 0 and 100."
                         @input-changed-value="handleChangedInputValue"
                     />
                 </div>
                 <div class="p-2 text-center">
                     <button
-                        type="submit"
+                        type="click"
                         class="btn btn-primary"
+                        v-on:click="submitRental"
                     >
                         Rent Tool Now
                     </button>
                 </div>
             </form>
         </div>
+    </div>
+    <div
+        v-else
+        class="text-bg-danger"
+    >
+        There was an API error and we were not able to load the form. Try reloading the page.
     </div>
 </template>
 
@@ -79,7 +94,11 @@
             'form-number-input': FormNumberInput,
         },
 
-        inject: ['tools', 'toolCharges'],
+        inject: [
+            'tools',
+            'toolCharges',
+            'apisFetched',
+        ],
 
         data() {
             return {
@@ -87,6 +106,8 @@
                     style: 'currency',
                     currency: 'USD',
                 }),
+
+                submitClicked: false,
 
                 toolSelect: {
                     required: true,
@@ -122,6 +143,10 @@
         },
 
         computed: {
+            allApisFetched() {
+                return this.apisFetched.tools && this.apisFetched.toolCharges;
+            },
+
             today() {
                 return moment().set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
             },
@@ -155,17 +180,39 @@
                 });
                 return options;
             },
+
+            formIsValid() {
+                let isValid = false;
+                const checkoutDateValid = this.checkoutDateInput.value.length > 0;
+                const returnDateValid = this.returnDateInput.value.length > 0;
+
+                if (checkoutDateValid && returnDateValid) {
+                    const checkoutDate = moment(this.checkoutDateInput.value);
+                    const returnDate = moment(this.returnDateInput.value);
+                    const dateRangeValid = checkoutDate.isBefore(returnDate);
+                    const discountValid = 0 <= this.discountInput.value && this.discountInput.value <= 100;
+                    const toolValid = this.toolSelect.value.length > 0;
+                    isValid = discountValid && toolValid && dateRangeValid;
+                }
+
+                return isValid;
+            },
         },
 
+        emits: ['rental-form-submitted'],
+
         methods: {
-            submitRental() {
-                console.log('toolSelectOptions', this.toolSelectOptions);
-                console.log('toolSelect.value', this.toolSelect.value);
-                console.log('checkoutDateInput.value', this.checkoutDateInput.value);
-                console.log('returnDateInput.value', this.returnDateInput.value);
-                console.log('discountInput.value', this.discountInput.value);
-                console.log('tools', this.tools.data);
-                console.log('toolCharges', this.toolCharges.data);
+            submitRental(e) {
+                this.submitClicked = true;
+                if (this.formIsValid) {
+                    this.$emit('rental-form-submitted', {
+                        toolSelected: this.toolSelect.value,
+                        checkoutDate: this.checkoutDateInput.value,
+                        returnDate: this.returnDateInput.value,
+                        discount: this.discountInput.value,
+                    });
+                }
+                e.preventDefault();
             },
 
             handleChangedInputValue(name, newValue) {

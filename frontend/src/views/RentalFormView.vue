@@ -1,9 +1,25 @@
 <script>
     import RentalForm from '../components/RentalForm.vue';
+    import RentalAgreement from '../components/RentalAgreement.vue';
 
     export default {
         components: {
             'rental-form': RentalForm,
+            'rental-agreement': RentalAgreement,
+        },
+
+        data() {
+            return {
+                rentalFormMode: true,
+                rentalData: {},
+            };
+        },
+
+        methods: {
+            handleRentalFormSubmit(rentalData) {
+                this.rentalFormMode = false;
+                this.rentalData = rentalData;
+            },
         },
     };
 </script>
@@ -24,14 +40,23 @@
             </div>
         </div>
 
-        <div class="row pt-3">
+        <div
+            v-if="rentalFormMode"
+            class="row pt-3"
+        >
             <div class="col-sm-12">
                 <p>
                     Please complete the information below to rent out equipment to your customer.
                 </p>
 
-                <rental-form />
+                <rental-form @rental-form-submitted="handleRentalFormSubmit" />
             </div>
+        </div>
+        <div
+            v-else
+            class="row pt-3"
+        >
+            <rental-agreement :info="rentalData" />
         </div>
     </div>
 </template>

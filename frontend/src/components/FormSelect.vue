@@ -28,6 +28,20 @@
                 {{ option.desc }}
             </option>
         </select>
+        <div class="invalid-feedback">
+            <span
+                v-if="warning.length"
+                class="text-bg-danger"
+            >
+                {{ warning }}
+                <span
+                    v-if="warningDetail.length"
+                >
+                    <br />
+                    {{ warningDetail }}
+                </span>
+            </span>
+        </div>
     </div>
 </template>
 
@@ -68,6 +82,18 @@
             },
 
             placeholder: {
+                type: String,
+                required: false,
+                default: '',
+            },
+
+            warning: {
+                type: String,
+                required: false,
+                default: '',
+            },
+
+            warningDetail: {
                 type: String,
                 required: false,
                 default: '',
