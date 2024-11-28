@@ -1,6 +1,6 @@
 <script>
     import { RouterLink, RouterView } from 'vue-router';
-    import apiFetcher from './services/apiFetcher.js';
+    import apiService from './services/apis.js';
 
     export default {
         data() {
@@ -23,8 +23,8 @@
         },
 
         async created() {
-            this.tools.data = await apiFetcher.getToolsMOCK();
-            this.toolCharges.data = await apiFetcher.getToolChargesMOCK();
+            this.tools.data = await apiService.getToolsMOCK();
+            this.toolCharges.data = await apiService.getToolChargesMOCK();
             this.apisFetched.tools = true;
             this.apisFetched.toolCharges = true;
         },

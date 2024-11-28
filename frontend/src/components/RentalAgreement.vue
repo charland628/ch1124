@@ -60,6 +60,7 @@
                     <button
                         type="button"
                         class="btn btn-primary"
+                        v-on:click="submitRental"
                     >
                         Submit Rental Agreement
                     </button>
@@ -74,7 +75,7 @@
     import moment from 'moment';
     import { RouterLink } from 'vue-router';
     import business from 'moment-business';
-    import holidaysGetter from '../services/holidaysGetter.js';
+    import holidayService from '../services/holidays.js';
 
     export default {
         data() {
@@ -159,7 +160,7 @@
             },
 
             holidays() {
-                return holidaysGetter.getHolidays(this.holidayYears);
+                return holidayService.getHolidays(this.holidayYears);
             },
 
             rentalSchedule() {
@@ -167,7 +168,7 @@
                 let currentDate = this.checkoutDate;
                 const endDate = this.returnDate;
 
-                while (currentDate.isBefore(endDate) || currentDate.isSame(endDate)) {
+                while (currentDate.isBefore(endDate)) {
                     const isWeekday = business.isWeekDay(currentDate);
                     const isWeekend = !isWeekday;
                     const isHoliday = this.holidays.some(day => day.isSame(currentDate));
@@ -199,7 +200,7 @@
             },
 
             subTotal() {
-                return (this.dailyCharge * this.chargeableDays).toFixed(2);
+                return Math.round(100 * this.dailyCharge * this.chargeableDays) / 100;
             },
 
             subTotalFormatted() {
@@ -211,7 +212,7 @@
             },
 
             discountAmount() {
-                return ((this.subTotal * this.info.discount) / 100).toFixed(2);
+                return Math.round(this.subTotal * this.info.discount) / 100;
             },
 
             discountAmountFormatted() {
@@ -231,5 +232,24 @@
             'tools',
             'toolCharges',
         ],
+
+        methods: {
+            submitRental(e) {
+                const payload = {
+                    toolCode: this.toolCode,
+                    checkoutDate: this.checkoutDateFormatted,
+                    returnDate: this.returnDateFormatted,
+                    discountPercent: this.discountPercent,
+                    chargeableDays: this.chargeableDays,
+                    dailyCharge: this.dailyCharge,
+                    prediscountAmount: this.subTotal,
+                    discountAmount: this.discountAmount,
+                    finalAmount: this.totalAmount,
+                };
+                console.log('rentalSchedule', this.rentalSchedule)
+                console.log('payload', payload);
+                //e.preventDefault();
+            },
+        },
     };
 </script>

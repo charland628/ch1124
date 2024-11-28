@@ -60,7 +60,7 @@
                     <button
                         type="button"
                         class="btn btn-primary"
-                        v-on:click="submitRental"
+                        v-on:click="checkout"
                     >
                         Check Out
                     </button>
@@ -203,7 +203,7 @@
         emits: ['rental-form-submitted'],
 
         methods: {
-            submitRental(e) {
+            checkout(e) {
                 this.submitClicked = true;
                 if (this.formIsValid) {
                     this.$emit('rental-form-submitted', {
