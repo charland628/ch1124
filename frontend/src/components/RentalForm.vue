@@ -52,17 +52,17 @@
                         :max="discountInput.maximum"
                         :required="discountInput.required"
                         :value="discountInput.value"
-                        warning="Discount percentage must be between 0 and 100."
+                        warning="Discount percentage must be a whole number between 0 and 100."
                         @input-changed-value="handleChangedInputValue"
                     />
                 </div>
                 <div class="p-2 text-center">
                     <button
-                        type="click"
+                        type="button"
                         class="btn btn-primary"
                         v-on:click="submitRental"
                     >
-                        Rent Tool Now
+                        Check Out
                     </button>
                 </div>
             </form>
@@ -190,9 +190,10 @@
                     const checkoutDate = moment(this.checkoutDateInput.value);
                     const returnDate = moment(this.returnDateInput.value);
                     const dateRangeValid = checkoutDate.isBefore(returnDate);
-                    const discountValid = 0 <= this.discountInput.value && this.discountInput.value <= 100;
+                    const validDiscountRange = 0 <= this.discountInput.value && this.discountInput.value <= 100;
+                    const discountIsInteger = Number.isInteger(this.discountInput.value);
                     const toolValid = this.toolSelect.value.length > 0;
-                    isValid = discountValid && toolValid && dateRangeValid;
+                    isValid = discountIsInteger && validDiscountRange && toolValid && dateRangeValid;
                 }
 
                 return isValid;

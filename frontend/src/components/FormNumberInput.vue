@@ -14,6 +14,7 @@
             :required="required"
             :min="min"
             :max="max"
+            step="1"
             v-model="inputValue"
             @change="handleInputChange"
         >

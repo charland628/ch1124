@@ -11,21 +11,6 @@ export default {
         SAT: 6,
     },
 
-    MONTHS: {
-        JAN: 0,
-        FEB: 1,
-        MAR: 2,
-        APR: 3,
-        MAY: 4,
-        JUN: 5,
-        JUL: 6,
-        AUG: 7,
-        SEP: 8,
-        OCT: 9,
-        NOV: 10,
-        DEC: 11,
-    },
-
     DAYS_IN_WEEK: 7,
 
     getHolidays(years) {
@@ -52,11 +37,7 @@ export default {
     },
 
     getDateForLaborDay(year) {
-        let holiday = moment()
-            .set('year', year)
-            .set('month', this.MONTHS.SEP)
-            .set('date', 1)
-            .isoWeekday(8); // 2nd week
+        let holiday = moment(`${year}-09-01`).isoWeekday(8); // 2nd week
 
         if (holiday.date() > this.DAYS_IN_WEEK) {
             holiday = holiday.isoWeekday(-6);
