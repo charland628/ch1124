@@ -23,8 +23,8 @@
         },
 
         async created() {
-            this.tools.data = await apiService.getToolsMOCK();
-            this.toolCharges.data = await apiService.getToolChargesMOCK();
+            this.tools.data = await apiService.getTools();
+            this.toolCharges.data = await apiService.getToolCharges();
             this.apisFetched.tools = true;
             this.apisFetched.toolCharges = true;
         },

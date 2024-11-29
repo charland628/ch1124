@@ -1,0 +1,23 @@
+[
+    {
+        "type": "ladder",
+        "dailyCharge": 1.99,
+        "chargeOnWeekday": true,
+        "chargeOnWeekend": true,
+        "chargeOnHoliday": false
+    },
+    {
+        "type": "chainsaw",
+        "dailyCharge": 1.49,
+        "chargeOnWeekday": true,
+        "chargeOnWeekend": false,
+        "chargeOnHoliday": true
+    },
+    {
+        "type": "jackhammer",
+        "dailyCharge": 2.99,
+        "chargeOnWeekday": true,
+        "chargeOnWeekend": false,
+        "chargeOnHoliday": false
+    }
+]

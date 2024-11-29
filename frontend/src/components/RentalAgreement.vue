@@ -76,6 +76,7 @@
     import { RouterLink } from 'vue-router';
     import business from 'moment-business';
     import holidayService from '../services/holidays.js';
+    import apiService from '../services/apis.js';
 
     export default {
         data() {
@@ -234,7 +235,7 @@
         ],
 
         methods: {
-            submitRental(e) {
+            async submitRental() {
                 const payload = {
                     toolCode: this.toolCode,
                     checkoutDate: this.checkoutDateFormatted,
@@ -246,9 +247,13 @@
                     discountAmount: this.discountAmount,
                     finalAmount: this.totalAmount,
                 };
-                console.log('rentalSchedule', this.rentalSchedule)
-                console.log('payload', payload);
-                //e.preventDefault();
+                const transmitted = await apiService.postToolRentalAgreement(payload);
+
+                if (transmitted.success) {
+                    this.$router.push('/');
+                } else {
+                    alert('There was an error submitting your request. Please try again.')
+                }
             },
         },
     };
