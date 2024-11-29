@@ -1,6 +1,7 @@
 <template>
     <div
         v-if="allApisFetched"
+        id="rental-form"
         class="row pt-1"
     >
         <div class="col-sm-12 text-bg-secondary">
@@ -58,6 +59,7 @@
                 </div>
                 <div class="p-2 text-center">
                     <button
+                        id="checkout-btn"
                         type="button"
                         class="btn btn-primary"
                         v-on:click="checkout"
@@ -70,6 +72,7 @@
     </div>
     <div
         v-else
+        id="rental-form-error"
         class="text-bg-danger"
     >
         There was an API error and we were not able to load the form. Try reloading the page.
@@ -152,7 +155,7 @@
             },
 
             tomorrow() {
-                return this.today.add(1, 'days');
+                return moment().set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).add(1, 'days');
             },
 
             todayAsString() {
