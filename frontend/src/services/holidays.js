@@ -45,4 +45,16 @@ export default {
 
         return holiday;
     },
+
+    getHolidayYearsFromDateRange(startDate, endDate) {
+        const years = [];
+        const startYear = startDate.year();
+        const endYear = endDate.year();
+        if (startYear <= endYear) {
+            for (let year = startYear; year <= endYear; year++) {
+                years.push(year);
+            }
+        }
+        return years;
+    },
 };

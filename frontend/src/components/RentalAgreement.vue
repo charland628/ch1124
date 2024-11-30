@@ -11,47 +11,47 @@
                         <tbody>
                             <tr>
                                 <td>Tool Code</td>
-                                <td>{{ toolCode }}</td>
+                                <td id="rental-tool-code">{{ toolCode }}</td>
                             </tr>
                             <tr>
                                 <td>Tool Type</td>
-                                <td>{{ toolType }}</td>
+                                <td id="rental-tool-type">{{ toolType }}</td>
                             </tr>
                             <tr>
                                 <td>Tool Brand</td>
-                                <td>{{ toolBrand }}</td>
+                                <td id="rental-tool-brand">{{ toolBrand }}</td>
                             </tr>
                             <tr>
                                 <td>Checkout Date</td>
-                                <td>{{ checkoutDateFormatted }}</td>
+                                <td id="rental-checkout-date">{{ checkoutDateFormatted }}</td>
                             </tr>
                             <tr>
                                 <td>Return Date</td>
-                                <td>{{ returnDateFormatted }}</td>
+                                <td id="rental-return-date">{{ returnDateFormatted }}</td>
                             </tr>
                             <tr>
                                 <td>Daily Rental Charge</td>
-                                <td>{{ dailyChargeFormatted }}</td>
+                                <td id="rental-daily-charge">{{ dailyChargeFormatted }}</td>
                             </tr>
                             <tr>
                                 <td>Chargeable Days</td>
-                                <td>{{ chargeableDays }}</td>
+                                <td id="rental-chargeable-days">{{ chargeableDays }}</td>
                             </tr>
                             <tr>
                                 <td>Pre-Discount Amount</td>
-                                <td>{{ subTotalFormatted }}</td>
+                                <td id="rental-prediscount-amount">{{ subTotalFormatted }}</td>
                             </tr>
                             <tr>
                                 <td>Discount Percent</td>
-                                <td>{{ discountPercent }}%</td>
+                                <td id="rental-discount-percent">{{ discountPercent }}%</td>
                             </tr>
                             <tr>
                                 <td>Discount amount</td>
-                                <td>{{ discountAmountFormatted }}</td>
+                                <td id="rental-discount-amount">{{ discountAmountFormatted }}</td>
                             </tr>
                             <tr>
                                 <td>Final amount</td>
-                                <td>{{ totalAmountFormatted }}</td>
+                                <td id="rental-final-amount">{{ totalAmountFormatted }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -59,6 +59,7 @@
                 <div class="card-footer text-center">
                     <button
                         type="button"
+                        id="rental-agreement-btn"
                         class="btn btn-primary"
                         v-on:click="submitRental"
                     >
@@ -153,11 +154,7 @@
             },
 
             holidayYears() {
-                const years = [];
-                for (let year = this.checkoutDate.year(); year <= this.returnDate.year(); year++) {
-                    years.push(year);
-                }
-                return years;
+                return holidayService.getHolidayYearsFromDateRange(this.checkoutDate, this.returnDate);
             },
 
             holidays() {
