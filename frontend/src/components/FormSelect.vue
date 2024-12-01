@@ -31,6 +31,7 @@
         <div class="invalid-feedback">
             <span
                 v-if="warning.length"
+                :id="warningId"
                 class="text-bg-danger"
             >
                 {{ warning }}
@@ -109,6 +110,10 @@
         computed: {
             showPlaceholder() {
                 return this.placeholder.length > 0;
+            },
+
+            warningId() {
+                return `invalid-feedback-${this.id}`;
             },
         },
 

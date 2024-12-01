@@ -30,8 +30,6 @@ describe('RentalForm', () => {
             },
         },
     };
-    const TODAY = moment().set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
-    const TOMORROW = moment().set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).add(1, 'days');
 
     it('renders a warning when APIs not loaded', () => {
         const wrapper = mount(RentalForm, { global: PROVIDE_BEFORE_API_LOAD });
@@ -64,6 +62,7 @@ describe('RentalForm', () => {
         expect(select.vm.options[3].desc).toBe('Brand D type3: Up to $2.99 per day');
         expect(select.vm.options[3].code).toBe('Code4');
         expect(select.vm.placeholder).toBe('Please select one of the following tools');
+        expect(select.vm.warningId).toBe('invalid-feedback-select-tool');
         expect(select.vm.warning).toBe('Please select a tool.');
         expect(select.vm.warningDetail).toBe('');
         expect(select.vm.value).toBe('');
@@ -74,7 +73,7 @@ describe('RentalForm', () => {
         expect(checkoutDate.vm.name).toBe('input-checkout-date');
         expect(checkoutDate.vm.label).toBe('Please choose a checkout date');
         expect(checkoutDate.vm.required).toBe(true);
-        expect(checkoutDate.vm.min).toBe(TODAY.format('YYYY-MM-DD'));
+        expect(checkoutDate.vm.warningId).toBe('invalid-feedback-input-checkout-date');
         expect(checkoutDate.vm.warning).toBe('Please enter a valid date.');
         expect(checkoutDate.vm.warningDetail).toBe('');
         expect(checkoutDate.vm.value).toBe('');
@@ -84,7 +83,8 @@ describe('RentalForm', () => {
         expect(returnDate.vm.name).toBe('input-return-date');
         expect(returnDate.vm.label).toBe('Please choose a return date (at least one day in future)');
         expect(returnDate.vm.required).toBe(true);
-        expect(returnDate.vm.min).toBe(TOMORROW.format('YYYY-MM-DD'));
+        expect(returnDate.vm.min).toBe('');
+        expect(returnDate.vm.warningId).toBe('invalid-feedback-input-return-date');
         expect(returnDate.vm.warning).toBe('Please enter a valid date.');
         expect(returnDate.vm.warningDetail).toBe('Return date must be at least one day after checkout date.');
         expect(returnDate.vm.value).toBe('');
@@ -96,6 +96,7 @@ describe('RentalForm', () => {
         expect(discount.vm.required).toBe(false);
         expect(discount.vm.min).toBe(0);
         expect(discount.vm.max).toBe(100);
+        expect(discount.vm.warningId).toBe('invalid-feedback-input-discount-amount');
         expect(discount.vm.warning).toBe('Discount percentage must be a whole number between 0 and 100.');
         expect(discount.vm.warningDetail).toBe('');
         expect(discount.vm.value).toBe(0);
@@ -103,10 +104,7 @@ describe('RentalForm', () => {
 
     it('date functions get correct dates and display correctly', async () => {
         const wrapper = mount(RentalForm, { global: PROVIDE_AFTER_API_LOAD });
-        expect(wrapper.vm.today.isSame(TODAY)).toBe(true);
-        expect(wrapper.vm.tomorrow.isSame(TOMORROW)).toBe(true);
-        expect(wrapper.vm.todayAsString).toBe(TODAY.format('YYYY-MM-DD'));
-        expect(wrapper.vm.firstAvailableReturnDateAsString).toBe(TOMORROW.format('YYYY-MM-DD'));
+        expect(wrapper.vm.firstAvailableReturnDateAsString).toBe('');
         await wrapper.setData({ checkoutDateInput: { value: '2099-03-14'} });
         expect(wrapper.vm.firstAvailableReturnDateAsString).toBe('2099-03-15');
     });

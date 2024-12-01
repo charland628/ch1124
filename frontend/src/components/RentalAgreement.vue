@@ -3,7 +3,12 @@
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title">Rental Agreement</h4>
+                    <h4
+                        id="rental-agreement-header"
+                        class="card-title"
+                    >
+                        Rental Agreement
+                    </h4>
                 </div>
 
                 <div class="card-body card-text">

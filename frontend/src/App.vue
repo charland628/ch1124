@@ -39,8 +39,20 @@
             <div class="container-fluid">
                 <nav class="navbar navbar-expand-sm bg-light justify-content-center">
                     <ul class="navbar-nav">
-                        <RouterLink class="nav-item nav-link text-primary" to="/">Home</RouterLink>
-                        <RouterLink class="nav-item nav-link text-primary" to="/rental-form">Point of Sale Rental Form</RouterLink>
+                        <RouterLink
+                            id="nav-link-home"
+                            class="nav-item nav-link text-primary"
+                            to="/"
+                        >
+                            Home
+                        </RouterLink>
+                        <RouterLink
+                            id="nav-link-rental-form"
+                            class="nav-item nav-link text-primary"
+                            to="/rental-form"
+                        >
+                            Point of Sale Rental Form
+                        </RouterLink>
                     </ul>
                 </nav>
             </div>

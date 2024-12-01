@@ -26,10 +26,17 @@
 
 <template>
     <div class="container p-5 bg-dark text-white">
-        <h1 class="text-center text-decoration-underline">Point of Sale Rent-a-Tool Form</h1>
+        <h1
+            id="rental-form-header"
+            class="text-center text-decoration-underline"
+        >
+            Point of Sale Rent-a-Tool Form
+        </h1>
 
         <div class="row pt-5">
-            <div class="col-sm-12">
+            <div
+                id="rental-form-desc"
+                class="col-sm-12">
                 This form is a point-of-sale rental form.
                 Customers may rent a tool for a given time period, specifying both the checkout date and the return date.
                 After checkout, a Rental Agreement will be produced.

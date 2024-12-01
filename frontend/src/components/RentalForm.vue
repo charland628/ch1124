@@ -24,7 +24,6 @@
                         label="Please choose a checkout date"
                         :id="checkoutDateInput.id"
                         :name="checkoutDateInput.name"
-                        :min="todayAsString"
                         :required="checkoutDateInput.required"
                         :value="checkoutDateInput.value"
                         warning="Please enter a valid date."
@@ -150,25 +149,14 @@
                 return this.apisFetched.tools && this.apisFetched.toolCharges;
             },
 
-            today() {
-                return moment().set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
-            },
-
-            tomorrow() {
-                return moment().set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).add(1, 'days');
-            },
-
-            todayAsString() {
-                return this.today.format('YYYY-MM-DD');
-            },
-
             firstAvailableReturnDateAsString() {
-                let latestDate = this.tomorrow;
+                let latestDate = '';
                 if (this.checkoutDateInput.value.length > 0) {
-                    const checkoutDate = moment(this.checkoutDateInput.value);
-                    latestDate = !checkoutDate.isBefore(this.tomorrow) ? checkoutDate.add(1, 'days') : this.tomorrow;
+                    latestDate = moment(this.checkoutDateInput.value)
+                        .add(1, 'days')
+                        .format('YYYY-MM-DD');
                 }
-                return latestDate.format('YYYY-MM-DD');
+                return latestDate;
             },
 
             toolSelectOptions() {
